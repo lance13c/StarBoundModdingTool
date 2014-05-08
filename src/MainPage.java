@@ -25,6 +25,9 @@ public class MainPage {
         main.view.setVisible(true);
     }
 
+    /**
+     * The Constructor for MainPage
+     */
     public MainPage() {
     }
 }
