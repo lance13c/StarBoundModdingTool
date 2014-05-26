@@ -14,9 +14,9 @@ import java.util.Observer;
 /**
  * Created by Dominic on 5/7/2014.
  */
-public class MainPageView extends JFrame implements Observer{
+public class MainPageView extends JFrame{
     private MainPageView view;
-    private JPanel mainPanel,upperPanel,centerPanel, upperRightPanel;
+    private JPanel mainPanel,upperPanel,leftPanel, upperRightPanel, rightPanel;
     //private JButton recipesB; // Recipes Button
     private JButton verifyB; // Verify Button, Checks if the directory is valid
     private JButton[][] gridB;  // Grid of Buttons
@@ -38,13 +38,15 @@ public class MainPageView extends JFrame implements Observer{
         mainPanel = new JPanel(new BorderLayout());
         upperPanel = new JPanel(new BorderLayout());
         upperRightPanel = new JPanel((new BorderLayout()));
-        centerPanel = new JPanel(new GridLayout(this.GRID_DIMENSION,this.GRID_DIMENSION));
+        leftPanel = new JPanel(new GridLayout(this.GRID_DIMENSION,this.GRID_DIMENSION));
+        rightPanel = new JPanel(new BorderLayout());
         //recipesB = new JButton("Recipes");
 
         verifyB = new JButton("Verify");
         //enterB.setName("Enter");
         dirLocTF = new JTextField(this.directoryBanner);
         verifyL = new JLabel("This is the Label");
+        verifyL.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         gridB = new JButton[this.GRID_DIMENSION][this.GRID_DIMENSION];
 
         // Initialized Array of Buttons
@@ -61,13 +63,14 @@ public class MainPageView extends JFrame implements Observer{
         upperPanel.add(dirLocTF);
         for(int i=0;i<this.GRID_DIMENSION;i++){
             for(int j=0;j<this.GRID_DIMENSION;j++){
-                centerPanel.add(gridB[j][i]);
+                leftPanel.add(gridB[j][i]);
             }
         }
-        //centerPanel.setPreferredSize(new Dimension(model.getWidth()/2,model.getHeight()/2));
-        //centerPanel.setSize(model.getWidth()/2,model.getHeight()/2);
+        //rightPanel.setPreferredSize(new Dimension(model.getWidth()/2,model.getHeight()/2));
+        //rightPanel.setSize(model.getWidth()/2,model.getHeight()/2);
         mainPanel.add(upperPanel,BorderLayout.NORTH);
-        mainPanel.add(centerPanel,BorderLayout.CENTER);
+        mainPanel.add(leftPanel,BorderLayout.WEST);
+        mainPanel.add(rightPanel,BorderLayout.EAST);
 
         this.add(mainPanel);
         this.validate();
@@ -92,11 +95,7 @@ public class MainPageView extends JFrame implements Observer{
      * @return - The directory location TextView
      */
     public JTextField getDirLocTF(){
-        return dirLocTF;
+        return this.dirLocTF;
     }
-
-    @Override
-    public void update(Observable o, Object arg) {
-
-    }
+    public JLabel getVerifyLabel() {return this.verifyL;}
 }

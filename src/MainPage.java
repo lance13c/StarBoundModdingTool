@@ -23,6 +23,7 @@ public class MainPage {
         main.controller = new MainPageController(main.view,main.model);
 
         main.view.setVisible(true);
+        main.controller.init();
     }
 
     /**

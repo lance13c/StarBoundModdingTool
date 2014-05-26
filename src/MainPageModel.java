@@ -9,20 +9,22 @@
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
  * Created by Dominic Cicilio on 5/7/2014.
  */
-public class MainPageModel implements Observable{
+public class MainPageModel{
     private int dim = 5; // The Dimension of the page
-    private int height = 200;
-    private int width = 400;
+    private int height = 300;
+    private int width = 800;
     private File directory;
+    //private String dir = "";
     private boolean validDirectory;
     private final ArrayList<String> validFiles = new ArrayList<String>();
+    private final String SAVE_FILE_NAME = "SaveInfo";
 
     /**
      * The Constructor for MainPageModel
@@ -52,17 +54,11 @@ public class MainPageModel implements Observable{
         return this.width;
     }
 
-
-    @Override
-    public void addListener(InvalidationListener invalidationListener) {
-
-    }
-
-    @Override
-    public void removeListener(InvalidationListener invalidationListener) {
-
-    }
-
+    /**
+     * Checks whether the directory is valid
+     * @param directoryName - the directory as a string
+     * @return - true if it is valid, otherwise false
+     */
     public boolean validateDir(String directoryName){
         try {
             this.directory = new File(directoryName);
@@ -103,8 +99,56 @@ public class MainPageModel implements Observable{
             System.err.println("Message: " + ex.getMessage());
         }
 
-
-
         return false;
+    }
+
+
+    public boolean readSaveData(){
+        BufferedReader buff = null;
+        try {
+            buff = new BufferedReader(new FileReader(this.SAVE_FILE_NAME));
+
+            String tempLine = buff.readLine();
+            //if (tempLine.equals(null)){break;}
+            if (!tempLine.equals(null)) {
+                String[] tempArray = tempLine.split("=");
+                //for (String s : tempArray) {
+                if (tempArray[0].equals("Dir")){
+                    if(tempArray.length > 1){
+                        if (this.validateDir(tempArray[1])){
+                            return true;
+                        }
+
+                    }
+                }
+                    //System.out.println(s);
+                //}
+            }
+
+            System.out.println("File Found");
+        }catch (FileNotFoundException e) {
+            System.err.println("SaveFile Not Found");
+        }catch (IOException exp){
+            System.err.println("Line was not available");
+        }finally {
+            try{
+                if (buff != null){
+                    buff.close();
+                }
+            }catch (IOException ex){
+                System.err.println("File Buffer never created");
+            }
+        }
+
+        //File saveInfo
+        return false;
+    }
+
+    public void writeToSaveFile(String dir){
+
+    }
+
+    public String getDir(){
+        return this.directory.getPath();
     }
 }
