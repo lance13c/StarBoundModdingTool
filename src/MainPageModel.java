@@ -40,7 +40,7 @@ public class MainPageModel{
         validFiles.add("mods");
         validFiles.add("player");
         validFiles.add("win32");
-        initSaveData = String.format("%s=\n%s=\n%s=","Dir","Mod1","Mod2");
+        initSaveData = String.format("%s=\n%s=\n%s=","Dir","Unpacked","Mod2");
     }
 
     /**
@@ -275,15 +275,22 @@ public class MainPageModel{
      */
     public boolean runUnpackingFile(){
         if (this.unpackedFile) {
-            System.out.println(this.getDir().trim()+"\\Unpacked_Assets");
             if (!new File(this.getDir().trim()+"\\Unpacked_Assets").exists()){
                 try {
                     Runtime.getRuntime().exec("cmd /c start Unpack.bat");
-                    return true;
                 } catch (IOException ex) {
                     ex.getStackTrace();
+                }finally {
+                    return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public boolean hasUnpacked(){
+        if (new File(this.getDir().trim()+"\\Unpacked_Assets").exists()){
+            return true;
         }
         return false;
     }

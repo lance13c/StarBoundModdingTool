@@ -38,10 +38,6 @@ public class MainPageController{
             this.view.validate();
         }
         this.model.createUnpackingFile();
-        if (this.model.runUnpackingFile()){
-            this.view.popUpMessage("Please wait until console window is closed(the black box)." +
-                    "The will take several minutes, please be patient.","Unpacking Assets");
-        }
 
     }
 
@@ -60,6 +56,17 @@ public class MainPageController{
                     view.getVerifyLabel().setText("Valid Directory");
                     model.writeToSaveFile("Dir",view.getDirLocTF().getText());
                     view.validate();
+                }
+            }
+            if (e.getActionCommand().equals("Unpack Assets")){
+                if (model.hasUnpacked()) {
+                    view.getUpdateLabel().setText("Found Unpacked Assets");
+                }else{
+                    if (model.runUnpackingFile()){
+                        view.popUpMessage("Please wait until console window is closed(the black box)." +
+                                "The will take several minutes, please be patient.","Unpacking Assets");
+                        view.getUpdateLabel().setText("Found Unpacked Assets");
+                    }
                 }
             }
         }

@@ -14,12 +14,13 @@ import java.awt.event.ActionListener;
  */
 public class MainPageView extends JFrame{
     private MainPageView view;
-    private JPanel mainPanel,upperPanel,leftPanel, upperRightPanel, rightPanel;
+    private JPanel mainPanel,upperPanel,leftPanel, upperRightPanel, rightPanel,
+        topOfRightPanel;
     //private JButton recipesB; // Recipes Button
-    private JButton verifyB; // Verify Button, Checks if the directory is valid
+    private JButton verifyB,unpackB; // Verify Button, Checks if the directory is valid
     private JButton[][] gridB;  // Grid of Buttons
     private JTextField dirLocTF; // Directory Location Text Field
-    private JLabel verifyL; // Verifying Directory Location Label
+    private JLabel verifyL, unpackL; // Verifying Directory Location Label
     private final String TITLE = "StarBoundModdingTool";
     private final int GRID_DIMENSION = 4;
     private final String directoryBanner = "Place StarBound Directory Here";
@@ -37,14 +38,20 @@ public class MainPageView extends JFrame{
         upperPanel = new JPanel(new BorderLayout());
         upperRightPanel = new JPanel((new BorderLayout()));
         leftPanel = new JPanel(new GridLayout(this.GRID_DIMENSION,this.GRID_DIMENSION));
-        rightPanel = new JPanel(new BorderLayout());
-        //recipesB = new JButton("Recipes");
 
-        verifyB = new JButton("Verify");
-        //enterB.setName("Enter");
+        rightPanel = new JPanel(new BorderLayout());
+        topOfRightPanel = new JPanel(new BorderLayout());
+
+        verifyB = new JButton("Verify"); // Verifies if the directory is valid
+        unpackB = new JButton("Unpack Assets"); // Unpacks assets folder
+
         dirLocTF = new JTextField(this.directoryBanner);
+
+        unpackL = new JLabel("No Unpacked Assets");
+        unpackL.setBorder((BorderFactory.createEmptyBorder(5,10,5,10)));
         verifyL = new JLabel("This is the Label");
         verifyL.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
         gridB = new JButton[this.GRID_DIMENSION][this.GRID_DIMENSION];
 
         // Initialized Array of Buttons
@@ -64,6 +71,9 @@ public class MainPageView extends JFrame{
                 leftPanel.add(gridB[j][i]);
             }
         }
+        topOfRightPanel.add(unpackB,BorderLayout.WEST);
+        topOfRightPanel.add(unpackL,BorderLayout.EAST);
+        rightPanel.add(topOfRightPanel,BorderLayout.NORTH);
         //rightPanel.setPreferredSize(new Dimension(model.getWidth()/2,model.getHeight()/2));
         //rightPanel.setSize(model.getWidth()/2,model.getHeight()/2);
         mainPanel.add(upperPanel,BorderLayout.NORTH);
@@ -86,6 +96,7 @@ public class MainPageView extends JFrame{
             }
         }
         verifyB.addActionListener(listener);
+        unpackB.addActionListener(listener);
     }
 
     /**
@@ -104,4 +115,5 @@ public class MainPageView extends JFrame{
         return this.dirLocTF;
     }
     public JLabel getVerifyLabel() {return this.verifyL;}
+    public JLabel getUpdateLabel() {return this.unpackL;}
 }
