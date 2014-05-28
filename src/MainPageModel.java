@@ -24,6 +24,7 @@ public class MainPageModel{
     private File directory;
     //private String dir = "";
     private boolean validDirectory;
+    private boolean unpackedFile;
     private final ArrayList<String> validFiles = new ArrayList<String>();
     private final String SAVE_FILE_NAME = "SaveInfo.save";
     private String initSaveData = "";
@@ -33,6 +34,7 @@ public class MainPageModel{
      */
     public MainPageModel() {
         this.validDirectory = false; // Need to replace with saved data later on
+        this.unpackedFile = false;
         validFiles.add("assets");
         validFiles.add("starbound.config");
         validFiles.add("mods");
@@ -83,7 +85,7 @@ public class MainPageModel{
             Collections.sort(this.validFiles);
             if (this.validFiles.equals(matched)){
                 System.out.println("Valid Directory!!!");
-                validDirectory = true;
+                this.validDirectory = true;
                 return true;
             }
 
@@ -102,7 +104,7 @@ public class MainPageModel{
      * ones were read in
      * @return - true if the data was received
      */
-    public boolean readSaveData(){
+    public boolean readSaveData(){       //DIRECTORIES WITH /n**** in them
         BufferedReader buff = null;
         try {
             buff = new BufferedReader(new FileReader(this.SAVE_FILE_NAME));
@@ -115,6 +117,7 @@ public class MainPageModel{
                 if (tempArray[0].equals("Dir")){
                     if(tempArray.length > 1){
                         if (this.validateDir(tempArray[1])){
+                            //this.validDirectory = true;
                             return true;
                         }
 
@@ -224,6 +227,61 @@ public class MainPageModel{
                 }
             }
         }
+    }
+
+    /**
+     * Creates the Unpacking Batch File
+     */
+    public boolean createUnpackingFile(){
+        if (!new File("Unpack.bat").exists()) {
+            if (this.validDirectory == true) {
+                String programDir = System.getProperty("user.dir"); // Gets program directory
+
+                final String UNPACKING_TEXT = "@ECHO OFF\ncd \\\ncd " + "\"" + this.getDir().trim() + "\"\n" +
+                        "start win32\\asset_unpacker.exe " + "assets\\packed.pak " + "Unpacked_Assets\nexit";
+
+                FileWriter writer = null;
+                this.unpackedFile = true; // If error thrown this will still be true
+                if (!new File("Unpack.bat").exists()) {
+                    try {
+                        writer = new FileWriter(new File("Unpack.bat"), false);
+                        writer.write(UNPACKING_TEXT);
+                        writer.flush();
+
+                    } catch (IOException e) {
+                        e.getStackTrace();
+                    } finally {
+                        try {
+                            if (writer != null) {
+                                writer.close();
+                            }
+                        } catch (IOException ex) {
+                            System.err.println("Error Closing Unpack File");
+                        }
+                        return true;
+                    }
+                }
+            }
+        }else{
+            this.unpackedFile = true;
+        }
+        return false;
+    }
+
+    /**
+     * Unpacks the assets file in StarBound
+     * @return - returns whether the file was unpacked successfully
+     */
+    public boolean runUnpackingFile(){
+        if (this.unpackedFile) {
+            try {
+                Runtime.getRuntime().exec("cmd /c start Unpack.bat");
+                return true;
+            } catch (IOException ex) {
+                ex.getStackTrace();
+            }
+        }
+        return false;
     }
 
     public String getDir(){

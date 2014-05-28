@@ -37,6 +37,11 @@ public class MainPageController{
             view.getVerifyLabel().setText("Valid Directory");
             this.view.validate();
         }
+        this.model.createUnpackingFile();
+        if (this.model.runUnpackingFile()){
+            this.view.popUpMessage("Please wait until console window is closed(the black box)." +
+                    "The will take several minutes, please be patient.","Unpacking Assets");
+        }
 
     }
 

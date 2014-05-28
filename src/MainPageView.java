@@ -8,8 +8,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by Dominic on 5/7/2014.
@@ -90,6 +88,14 @@ public class MainPageView extends JFrame{
         verifyB.addActionListener(listener);
     }
 
+    /**
+     * Creates a popup message
+     * @param message - The message to be displayed
+     * @param loc - where the message should be displayed
+     */
+    public void popUpMessage(String message, String title){
+        JOptionPane.showMessageDialog(null,message,title,JOptionPane.INFORMATION_MESSAGE);
+    }
     /**
      * The Accessor for dirLocTF
      * @return - The directory location TextView
