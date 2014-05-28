@@ -12,6 +12,7 @@ import javafx.beans.Observable;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 /**
  * Created by Dominic Cicilio on 5/7/2014.
@@ -24,7 +25,8 @@ public class MainPageModel{
     //private String dir = "";
     private boolean validDirectory;
     private final ArrayList<String> validFiles = new ArrayList<String>();
-    private final String SAVE_FILE_NAME = "SaveInfo";
+    private final String SAVE_FILE_NAME = "SaveInfo.save";
+    private String initSaveData = "";
 
     /**
      * The Constructor for MainPageModel
@@ -36,6 +38,7 @@ public class MainPageModel{
         validFiles.add("mods");
         validFiles.add("player");
         validFiles.add("win32");
+        initSaveData = String.format("%s=\n%s=\n%s=","Dir","Mod1","Mod2");
     }
 
     /**
@@ -78,15 +81,6 @@ public class MainPageModel{
             System.out.println();
             Collections.sort(matched);
             Collections.sort(this.validFiles);
-            /*
-            for (String m:matched) {
-                System.out.println("Matched : " + m);
-            }
-
-            for (String s:this.validFiles){
-                System.out.println("String: " +s);
-            }
-            */
             if (this.validFiles.equals(matched)){
                 System.out.println("Valid Directory!!!");
                 validDirectory = true;
@@ -102,7 +96,12 @@ public class MainPageModel{
         return false;
     }
 
-
+    /**
+     * Finds the saved directory if one exists.
+     * Later on, make it so this reads all save references and prints out which
+     * ones were read in
+     * @return - true if the data was received
+     */
     public boolean readSaveData(){
         BufferedReader buff = null;
         try {
@@ -144,8 +143,87 @@ public class MainPageModel{
         return false;
     }
 
-    public void writeToSaveFile(String dir){
+    /**
+     * Grabs data from the file and puts it into a string. Divides that string up by each new line.
+     * Going through each line it checks if the dataRef equals the first element on the new line and
+     * checks if the length is greater then 1. If so, it will write to the SaveInfo File.
+     * @param dataRef - String before = in SaveInfo specifying where to save the data
+     * @param data - The data to save
+     */
+    public void writeToSaveFile(String dataRef,String data){
+        //BufferedWriter buffW = null;
+        //BufferedReader buffR = null;
+        //RandomAccessFile raf = null;
+        Scanner scan = null;
+        FileWriter writer = null;
+        String fileData;
+        String[] dataArray;
+        String updatedFileData = "";
+        try{
+            String[] subDataArray;
+            scan = new Scanner(new File(this.SAVE_FILE_NAME));
+            fileData = scan.useDelimiter("\\A").next();
+            dataArray = fileData.split("\n");
+            for (String s: dataArray){
+                subDataArray = s.split("=");
+                if (dataRef.equals(subDataArray[0])) {
+                        updatedFileData += dataRef + "=" + data;
+                }else{
+                    for (int i=0;i<subDataArray.length;i++){
+                        updatedFileData += subDataArray[i] + "=";
+                    }
+                }
+                updatedFileData += "\n";  // Might be added an additional new line every time
+            }
+        }catch (FileNotFoundException ex) {
+            System.err.println("Writing File Not Found");
+        }finally {
+            if (scan != null) {
+                scan.close();
+            }
+            System.out.println(updatedFileData);
+        }
 
+        try{
+            writer = new FileWriter(new File(this.SAVE_FILE_NAME),false);
+            writer.write(updatedFileData);
+            writer.flush();
+        }catch (IOException e){
+            System.err.println("Error Writing to File");
+        }finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            }catch (IOException ex){
+                System.err.println("Error Closing SaveFile");
+            }
+        }
+
+    }
+
+    /**
+     * Creates the File that contains all the saved information
+     */
+    public void createSaveFile(){
+        FileWriter writer = null;
+        if (!new File("SaveInfo.save").exists()) {
+            try {
+                writer = new FileWriter(new File("SaveInfo.save"), false);
+                writer.write(initSaveData);
+                writer.flush();
+            } catch (IOException e) {
+                e.getStackTrace();
+            } finally {
+                try {
+                    if (writer != null) {
+                        writer.close();
+                    }
+                } catch (IOException ex) {
+                    System.err.println("Error Closing SaveFile");
+                }
+            }
+        }
     }
 
     public String getDir(){

@@ -31,6 +31,7 @@ public class MainPageController{
      * Initializes the data when opening the program
      */
     public void init(){
+        this.model.createSaveFile();
         if (this.model.readSaveData()){
             view.getDirLocTF().setText(this.model.getDir());
             view.getVerifyLabel().setText("Valid Directory");
@@ -52,6 +53,7 @@ public class MainPageController{
                 System.out.println("Verify Command: " + view.getDirLocTF().getText());
                 if (model.validateDir(view.getDirLocTF().getText()) == true){
                     view.getVerifyLabel().setText("Valid Directory");
+                    model.writeToSaveFile("Dir",view.getDirLocTF().getText());
                     view.validate();
                 }
             }
