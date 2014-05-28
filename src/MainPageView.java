@@ -102,10 +102,14 @@ public class MainPageView extends JFrame{
     /**
      * Creates a popup message
      * @param message - The message to be displayed
-     * @param loc - where the message should be displayed
+     * @param title - title of the popup
      */
     public void popUpMessage(String message, String title){
-        JOptionPane.showMessageDialog(null,message,title,JOptionPane.INFORMATION_MESSAGE);
+        JFrame tempF = new JFrame();
+        tempF.setAlwaysOnTop(true);
+        tempF.setLocationRelativeTo(null);
+        tempF.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JOptionPane.showMessageDialog(tempF,message,title,JOptionPane.INFORMATION_MESSAGE);
     }
     /**
      * The Accessor for dirLocTF
@@ -115,5 +119,5 @@ public class MainPageView extends JFrame{
         return this.dirLocTF;
     }
     public JLabel getVerifyLabel() {return this.verifyL;}
-    public JLabel getUpdateLabel() {return this.unpackL;}
+    public JLabel getUnpackedLabel() {return this.unpackL;}
 }

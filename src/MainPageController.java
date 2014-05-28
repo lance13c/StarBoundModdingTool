@@ -45,7 +45,7 @@ public class MainPageController{
             model.setUnpacked(Boolean.getBoolean(data));
         }
         if(data.equals("true")){
-            view.getUpdateLabel().setText("Found Unpacked Assets");
+            view.getUnpackedLabel().setText("Found Unpacked Assets");
         }
 
 
@@ -70,12 +70,12 @@ public class MainPageController{
             }
             if (e.getActionCommand().equals("Unpack Assets")){
                 if (model.hasUnpacked()) {
-                    view.getUpdateLabel().setText("Found Unpacked Assets");
+                    view.getUnpackedLabel().setText("Found Unpacked Assets");
                 }else{
                     if (model.runUnpackingFile()){
-                        view.popUpMessage("Please wait until console window is closed(the black box)." +
-                                "The will take several minutes, please be patient.","Unpacking Assets");
-                        view.getUpdateLabel().setText("Found Unpacked Assets");
+                            view.popUpMessage("Please wait until console window is closed(the black box)." +
+                                    "The will take several minutes, please be patient.","Unpacking Assets");
+                            view.getUnpackedLabel().setText("Found Unpacked Assets");
                     }
                 }
             }

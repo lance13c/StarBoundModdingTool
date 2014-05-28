@@ -235,8 +235,9 @@ public class MainPageModel{
             if (this.validDirectory == true) {
                 String programDir = System.getProperty("user.dir"); // Gets program directory
 
-                final String UNPACKING_TEXT = "@ECHO OFF\ncd \\\ncd " + "\"" + this.getDir().trim() + "\"\n" +
-                        "start win32\\asset_unpacker.exe " + "assets\\packed.pak " + "Unpacked_Assets\nexit";
+                final String UNPACKING_TEXT = "@ECHO OFF\ntitle Unpacking Assets\ncd \\\ncd " + "\""
+                        + this.getDir().trim() + "\"\n" + "start win32\\asset_unpacker.exe "
+                        + "assets\\packed.pak " + "Unpacked_Assets\nexit";
 
                 FileWriter writer = null;
                 this.unpackedFile = true; // If error thrown this will still be true
@@ -271,17 +272,15 @@ public class MainPageModel{
      * @return - returns whether the file was unpacked successfully
      */
     public boolean runUnpackingFile(){
-        if (this.unpackedFile) {
-            if (!new File(this.getDir().trim()+"\\Unpacked_Assets").exists()){
-                try {
-                    Runtime.getRuntime().exec("cmd /c start Unpack.bat");
-                } catch (IOException ex) {
-                    ex.getStackTrace();
-                }finally {
-                    this.writeToSaveFile("Unpacked","true");
-                    this.unpackedFile = true;
-                    return true;
-                }
+        if (!new File(this.getDir().trim()+"\\Unpacked_Assets").exists()){
+            try {
+                Runtime.getRuntime().exec("cmd /c start Unpack.bat");
+            } catch (IOException ex) {
+                ex.getStackTrace();
+            }finally {
+                this.writeToSaveFile("Unpacked","true");
+                this.unpackedFile = true;
+                return true;
             }
         }
         return false;
@@ -295,7 +294,7 @@ public class MainPageModel{
      */
     public boolean hasUnpacked(){
         if (new File(this.getDir().trim()+"\\Unpacked_Assets").exists()){
-            if (this.readSaveData("Unpacked") == null){
+            if (this.readSaveData("Unpacked") != "true"){
                 this.writeToSaveFile("Unpacked","true");
             }
             return true;
