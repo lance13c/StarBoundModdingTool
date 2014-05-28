@@ -72,10 +72,14 @@ public class MainPageController{
                 if (model.hasUnpacked()) {
                     view.getUnpackedLabel().setText("Found Unpacked Assets");
                 }else{
-                    if (model.runUnpackingFile()){
-                            view.popUpMessage("Please wait until console window is closed(the black box)." +
-                                    "The will take several minutes, please be patient.","Unpacking Assets");
-                            view.getUnpackedLabel().setText("Found Unpacked Assets");
+                    int tempI = model.runUnpackingFile();
+                    if (tempI == 1){
+                        view.popUpMessage("Please wait until console window is closed(the black box)." +
+                                "The will take several minutes, please be patient.","Unpacking Assets");
+                        view.getUnpackedLabel().setText("Found Unpacked Assets");
+                    }else if(tempI == 2){
+                        view.popUpMessage("The File to Unpack the assets is not create. Please wait 5 seconds" +
+                                 "and try again","Unpacking File Not Created");
                     }
                 }
             }

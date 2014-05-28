@@ -269,21 +269,28 @@ public class MainPageModel{
 
     /**
      * Unpacks the assets file in StarBound
-     * @return - returns whether the file was unpacked successfully
+     * @return - 1 if successful, 0 if it failed, 2 if the unpacking file was not made
      */
-    public boolean runUnpackingFile(){
-        if (!new File(this.getDir().trim()+"\\Unpacked_Assets").exists()){
-            try {
-                Runtime.getRuntime().exec("cmd /c start Unpack.bat");
-            } catch (IOException ex) {
-                ex.getStackTrace();
-            }finally {
-                this.writeToSaveFile("Unpacked","true");
-                this.unpackedFile = true;
-                return true;
+    public int runUnpackingFile(){
+        String programDir = System.getProperty("user.dir"); // Gets program directory
+        if (new File(programDir+"\\Unpack.bat").exists()) {
+            if (!new File(this.getDir().trim() + "\\Unpacked_Assets").exists()) {
+                try {
+                    Runtime.getRuntime().exec("cmd /c start Unpack.bat");
+                } catch (IOException ex) {
+                    ex.getStackTrace();
+                } finally {
+                    this.writeToSaveFile("Unpacked", "true");
+                    this.unpackedFile = true;
+                    return 1;
+                }
             }
+        }else{
+            System.out.println("Waiting for Unpack.bat creation");
+            createUnpackingFile();
+            return 2;
         }
-        return false;
+        return 0;
     }
 
     /**
