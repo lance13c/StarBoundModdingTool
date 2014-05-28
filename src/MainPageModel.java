@@ -231,6 +231,7 @@ public class MainPageModel{
 
     /**
      * Creates the Unpacking Batch File
+     * @return - true if it is creating a new Unpack.bat file, else false
      */
     public boolean createUnpackingFile(){
         if (!new File("Unpack.bat").exists()) {
@@ -274,11 +275,14 @@ public class MainPageModel{
      */
     public boolean runUnpackingFile(){
         if (this.unpackedFile) {
-            try {
-                Runtime.getRuntime().exec("cmd /c start Unpack.bat");
-                return true;
-            } catch (IOException ex) {
-                ex.getStackTrace();
+            System.out.println(this.getDir().trim()+"\\Unpacked_Assets");
+            if (!new File(this.getDir().trim()+"\\Unpacked_Assets").exists()){
+                try {
+                    Runtime.getRuntime().exec("cmd /c start Unpack.bat");
+                    return true;
+                } catch (IOException ex) {
+                    ex.getStackTrace();
+                }
             }
         }
         return false;
