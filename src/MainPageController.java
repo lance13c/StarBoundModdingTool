@@ -32,12 +32,22 @@ public class MainPageController{
      */
     public void init(){
         this.model.createSaveFile();
-        if (this.model.readSaveData()){
+        String data = this.model.readSaveData("Dir");
+        if (data != null){
+            model.validateDir(data);
             view.getDirLocTF().setText(this.model.getDir());
             view.getVerifyLabel().setText("Valid Directory");
             this.view.validate();
         }
         this.model.createUnpackingFile();
+        data = this.model.readSaveData("Unpacked");
+        if (data != null){
+            model.setUnpacked(Boolean.getBoolean(data));
+        }
+        if(data.equals("true")){
+            view.getUpdateLabel().setText("Found Unpacked Assets");
+        }
+
 
     }
 

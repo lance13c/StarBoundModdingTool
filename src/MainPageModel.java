@@ -104,27 +104,24 @@ public class MainPageModel{
      * ones were read in
      * @return - true if the data was received
      */
-    public boolean readSaveData(){       //DIRECTORIES WITH /n**** in them
+    public String readSaveData(String ref){       //DIRECTORIES WITH /n**** in them
         BufferedReader buff = null;
         try {
             buff = new BufferedReader(new FileReader(this.SAVE_FILE_NAME));
 
             String tempLine = buff.readLine();
             //if (tempLine.equals(null)){break;}
-            if (!tempLine.equals(null)) {
+            while(tempLine != null) {
                 String[] tempArray = tempLine.split("=");
                 //for (String s : tempArray) {
-                if (tempArray[0].equals("Dir")){
+                if (tempArray[0].equals(ref)){
                     if(tempArray.length > 1){
-                        if (this.validateDir(tempArray[1])){
-                            //this.validDirectory = true;
-                            return true;
-                        }
-
+                        return tempArray[1];
                     }
                 }
                     //System.out.println(s);
                 //}
+                tempLine = buff.readLine();
             }
 
             System.out.println("File Found");
@@ -143,7 +140,7 @@ public class MainPageModel{
         }
 
         //File saveInfo
-        return false;
+        return null;
     }
 
     /**
@@ -281,6 +278,8 @@ public class MainPageModel{
                 } catch (IOException ex) {
                     ex.getStackTrace();
                 }finally {
+                    this.writeToSaveFile("Unpacked","true");
+                    this.unpackedFile = true;
                     return true;
                 }
             }
@@ -288,8 +287,17 @@ public class MainPageModel{
         return false;
     }
 
+    /**
+     * Checks whether the file is unpacked, if it is it will
+     * check if it is recorded in the save file. If not, it will
+     * record it there.
+     * @return - true if there are Unpacked Assets, else false
+     */
     public boolean hasUnpacked(){
         if (new File(this.getDir().trim()+"\\Unpacked_Assets").exists()){
+            if (this.readSaveData("Unpacked") == null){
+                this.writeToSaveFile("Unpacked","true");
+            }
             return true;
         }
         return false;
@@ -297,5 +305,13 @@ public class MainPageModel{
 
     public String getDir(){
         return this.directory.getPath();
+    }
+
+    /**
+     * Maniplultor for the UnpackedFile var;
+     * @param b - true or false
+     */
+    public void setUnpacked(boolean b){
+        this.unpackedFile = b;
     }
 }
