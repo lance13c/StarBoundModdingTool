@@ -303,6 +303,10 @@ public class MainPageModel{
         return false;
     }
 
+    /**
+     *
+     * @return - The StarBound directory path
+     */
     public String getDir(){
         return this.directory.getPath();
     }
