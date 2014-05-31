@@ -43,10 +43,11 @@ public class MainPageController{
         data = this.model.readSaveData("Unpacked");
         if (data != null){
             model.setUnpacked(Boolean.getBoolean(data));
+            if(data.equals("true")){
+                view.getUnpackedLabel().setText("Found Unpacked Assets");
+            }
         }
-        if(data.equals("true")){
-            view.getUnpackedLabel().setText("Found Unpacked Assets");
-        }
+
 
 
     }
